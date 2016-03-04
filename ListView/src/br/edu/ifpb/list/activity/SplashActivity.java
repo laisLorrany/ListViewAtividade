@@ -1,4 +1,4 @@
-package br.edu.ifpb.entidades;
+package br.edu.ifpb.list.activity;
 
 import java.util.Timer;
 import java.util.TimerTask;

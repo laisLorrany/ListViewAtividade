@@ -1,6 +1,7 @@
-package br.edu.ifpb.entidades;
+package br.edu.ifpb.list.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,17 +14,19 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import br.edu.ifpb.list.adapter.PessoasCustomAdapter;
 import br.edu.ifpb.list.asynctask.BuscaAsyncTask;
+import br.edu.ifpb.list.entidades.Pessoa;
+import br.edu.ifpb.list.interfaces.BuscarPessoaCallBack;
 import br.edu.ifpb.listview.R;
 
-public class MainActivity extends Activity implements TextWatcher{
+public class MainActivity extends Activity implements TextWatcher, BuscarPessoaCallBack{
 	
 	final int TAMANHO_MINIMO = 4;
 
 	ArrayAdapter<String> arrayAdapter;
-	ArrayList<String> nomes = new ArrayList<String>();
-	ListView listView;
-	JSONObject json = new JSONObject();	
+	ArrayList<Pessoa> pessoas = new ArrayList<Pessoa>();
+	PessoasCustomAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +36,9 @@ public class MainActivity extends Activity implements TextWatcher{
 		EditText nomeEditText = (EditText) findViewById(R.id.nomeEditText);
 		nomeEditText.addTextChangedListener(this);
 				
-		listView = (ListView) findViewById(R.id.nomesListView);		
-		arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, nomes);
-		listView.setAdapter(arrayAdapter);
-		
+		ListView nomesListView = (ListView) findViewById(R.id.nomesListView);		
+		adapter = new PessoasCustomAdapter(this, pessoas);
+        nomesListView.setAdapter(adapter);
 	}
 
 	@Override
@@ -59,6 +61,9 @@ public class MainActivity extends Activity implements TextWatcher{
 		/*String nome = s.toString();
 		nomes.add(nome);	
 		arrayAdapter.notifyDataSetChanged();*/
+
+		JSONObject json = new JSONObject();
+		
 		if(s.length() >= TAMANHO_MINIMO){
 			try {	
 				json.put("fullName", s.toString());
@@ -66,12 +71,21 @@ public class MainActivity extends Activity implements TextWatcher{
 				Log.e("Main Activity", e.getMessage());
 			}
 			
-			BuscaAsyncTask buscaAsyncTask = new BuscaAsyncTask(this, listView);
+			BuscaAsyncTask buscaAsyncTask = new BuscaAsyncTask(this);
 			buscaAsyncTask.execute(json);
 		}else{
-			nomes.clear();
+			pessoas.clear();
 			arrayAdapter.notifyDataSetChanged();
 		}
+		
+	}
+
+	@Override
+	public void backBuscarNome(List<Pessoa> names) {		
+
+        this.pessoas.clear();
+        this.pessoas.addAll(pessoas);
+        adapter.notifyDataSetChanged();
 		
 	}
 }

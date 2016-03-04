@@ -1,31 +1,32 @@
 package br.edu.ifpb.list.asynctask;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import br.edu.ifpb.list.activity.MainActivity;
+import br.edu.ifpb.list.entidades.Pessoa;
 import br.edu.ifpb.list.util.HttpService;
 import br.edu.ifpb.list.util.Response;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class BuscaAsyncTask  extends AsyncTask<JSONObject, Void, Response> {
 	
 	Response response;
-	Context context;
+	MainActivity mainActivity;
 	ListView list;
 	
-	public BuscaAsyncTask(Context context, ListView list) {
-		this.context = context;
-		this.list = list;
+	public BuscaAsyncTask(MainActivity mainActivity) {
+		this.mainActivity = mainActivity;
 	}
 
 	@Override
@@ -57,31 +58,18 @@ public class BuscaAsyncTask  extends AsyncTask<JSONObject, Void, Response> {
 			Log.e("BuscaAsyncTask", e.getMessage());
 		}
 		*/
-		ArrayList<String> nomes = new ArrayList<String>();
-		
-		if(result != null){
-			try {
-				JSONArray jsonResult = new JSONArray(result.getContentValue());
-				
-				for(int i=0; i < jsonResult.length(); i++){
-					JSONObject json = jsonResult.getJSONObject(i);
-					String nome = json.getString("fullName");
-					nomes.add(nome);
-				}
-				
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>
-				(context, android.R.layout.simple_list_item_1, nomes);
-				adapter.notifyDataSetChanged();
-				list.setAdapter(adapter);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else{
-			
-			nomes.clear();
-			list.getAdapter().notify();
-		}
+		 int codeHttp = response.getStatusCodeHttp();
+
+	        Log.i("EditTextListener", "Código HTTP: " + codeHttp
+	                + " Conteúdo: " + response.getContentValue());
+
+	        if (codeHttp == HttpURLConnection.HTTP_OK) {
+	        	Gson gson = new Gson();
+	            List<Pessoa> pessoas = gson.fromJson(response.getContentValue(),
+	                    new TypeToken<ArrayList<Pessoa>>(){}.getType());
+
+	            mainActivity.backBuscarNome(pessoas);
+	        }
 			
 	}
 	
