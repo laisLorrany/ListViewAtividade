@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import br.edu.ifpb.list.entidades.Pessoa;
-import br.edu.ifpb.listview.R;
+import br.edu.ifpb.list.R;
 
 public class PessoasCustomAdapter extends BaseAdapter {
 

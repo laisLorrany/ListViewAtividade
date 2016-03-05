@@ -1,14 +1,33 @@
 package br.edu.ifpb.list.entidades;
 
-public class Pessoa {
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class Pessoa implements Serializable{
+
+	@SerializedName("id")
+	private int id;
 	
+	@SerializedName("fullName")
 	private String nome;
 
+	@SerializedName("typeInscription")
 	private String inscription;
 
+	@SerializedName("email")
 	private String email;
 
+	@SerializedName("isDelivered")
 	private boolean entregue;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getNome() {
 		return nome;

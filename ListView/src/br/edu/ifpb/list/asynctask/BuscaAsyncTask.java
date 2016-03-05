@@ -48,29 +48,21 @@ public class BuscaAsyncTask  extends AsyncTask<JSONObject, Void, Response> {
 	
 	@Override
 	protected void onPostExecute(Response result) {
-		
-		/*String nomes = result.getContentValue();
-		try{
+
+		int codeHttp = response.getStatusCodeHttp();
+
+		Log.i("EditTextListener", "Código HTTP: " + codeHttp + " Conteúdo: "
+				+ response.getContentValue());
+
+		if (codeHttp == HttpURLConnection.HTTP_OK) {
 			Gson gson = new Gson();
-			JSONObject json = gson.fromJson(nomes, null);
-			
-		}catch(Exception e){
-			Log.e("BuscaAsyncTask", e.getMessage());
+			List<Pessoa> pessoas = gson.fromJson(response.getContentValue(),
+					new TypeToken<ArrayList<Pessoa>>() {
+					}.getType());
+
+			mainActivity.backBuscarNome(pessoas);
 		}
-		*/
-		 int codeHttp = response.getStatusCodeHttp();
 
-	        Log.i("EditTextListener", "Código HTTP: " + codeHttp
-	                + " Conteúdo: " + response.getContentValue());
-
-	        if (codeHttp == HttpURLConnection.HTTP_OK) {
-	        	Gson gson = new Gson();
-	            List<Pessoa> pessoas = gson.fromJson(response.getContentValue(),
-	                    new TypeToken<ArrayList<Pessoa>>(){}.getType());
-
-	            mainActivity.backBuscarNome(pessoas);
-	        }
-			
 	}
 	
 }

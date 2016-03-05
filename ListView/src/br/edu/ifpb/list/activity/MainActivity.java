@@ -11,16 +11,21 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+import br.edu.ifpb.list.R;
 import br.edu.ifpb.list.adapter.PessoasCustomAdapter;
 import br.edu.ifpb.list.asynctask.BuscaAsyncTask;
 import br.edu.ifpb.list.entidades.Pessoa;
 import br.edu.ifpb.list.interfaces.BuscarPessoaCallBack;
-import br.edu.ifpb.listview.R;
 
-public class MainActivity extends Activity implements TextWatcher, BuscarPessoaCallBack{
+public class MainActivity extends Activity 
+	implements TextWatcher, BuscarPessoaCallBack, OnItemClickListener{
 	
 	final int TAMANHO_MINIMO = 4;
 
@@ -86,6 +91,19 @@ public class MainActivity extends Activity implements TextWatcher, BuscarPessoaC
         this.pessoas.clear();
         this.pessoas.addAll(pessoas);
         adapter.notifyDataSetChanged();
+		
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		
+		Log.i("EditTextListener", "Position: " + position);
+
+        Toast toast = Toast.makeText(this,
+                "Item " + (position + 1) + ": " + pessoas.get(position),
+                Toast.LENGTH_LONG);
+        toast.show();
 		
 	}
 }
