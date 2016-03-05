@@ -42,4 +42,11 @@ public class Pessoa {
 		this.entregue = entregue;
 	}
 	
+	public String getEntrega(){
+		if(this.isEntregue()){
+			return "Foi entregue";
+		}
+		return "Não foi entregue";
+	}
+	
 }

@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
@@ -19,7 +20,7 @@ import br.edu.ifpb.list.util.Response;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class BuscaAsyncTask  extends AsyncTask<JSONObject, Void, Response> {
+public class BuscaAsyncTask  extends AsyncTask<Pessoa, Void, Response> {
 	
 	Response response;
 	MainActivity mainActivity;
@@ -30,10 +31,13 @@ public class BuscaAsyncTask  extends AsyncTask<JSONObject, Void, Response> {
 	}
 
 	@Override
-	protected Response doInBackground(JSONObject... params) {
+	protected Response doInBackground(Pessoa... params) {
 
 		try {
-			response = HttpService.sendJSONPostRequest("get-byname", params[0]);
+			Gson gson = new Gson();
+			String pessoa = gson.toJson(params[0]);
+			JSONObject json = new JSONObject(pessoa);
+			response = HttpService.sendJSONPostRequest("get-byname", json);
 			
 		} catch (MalformedURLException e) {
 			Log.e("BuscaAsyncTask - doInBackground", e.getMessage());
@@ -41,6 +45,9 @@ public class BuscaAsyncTask  extends AsyncTask<JSONObject, Void, Response> {
 		} catch (IOException e) {
 			Log.e("BuscaAsyncTask - doInBackground", e.getMessage());
 			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return response;
