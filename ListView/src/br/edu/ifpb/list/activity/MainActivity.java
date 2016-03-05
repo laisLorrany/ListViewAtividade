@@ -61,14 +61,18 @@ public class MainActivity extends Activity implements TextWatcher, BuscarPessoaC
 		/*String nome = s.toString();
 		nomes.add(nome);	
 		arrayAdapter.notifyDataSetChanged();*/
+
+		JSONObject json = new JSONObject();
 		
 		if(s.length() >= TAMANHO_MINIMO){
+			try {	
+				json.put("fullName", s.toString());
+			} catch (JSONException e) {
+				Log.e("Main Activity", e.getMessage());
+			}
 			
-			Pessoa pessoa = new Pessoa();
-			pessoa.setNome(s.toString());
-		
 			BuscaAsyncTask buscaAsyncTask = new BuscaAsyncTask(this);
-			buscaAsyncTask.execute(pessoa);
+			buscaAsyncTask.execute(json);
 		}else{
 			pessoas.clear();
 			arrayAdapter.notifyDataSetChanged();
